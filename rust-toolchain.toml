@@ -1,0 +1,5 @@
+# The Rust counterpart of .nvmrc: rustup installs this toolchain on first use.
+# Bump the minor with each dependency sweep.
+[toolchain]
+channel = "1.99"
+components = ["rustfmt", "clippy"]

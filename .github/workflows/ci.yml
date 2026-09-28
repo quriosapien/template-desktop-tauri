@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ui:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # Node 26 bundles npm 11; devEngines requires npm >= 12. setup-node's npm
+      # cache runs `npm config get cache` inside the repo, which devEngines
+      # rejects under npm 11, so: Node first, then npm 12 (installed outside the
+      # repo), then a second setup-node pass that only enables the cache.
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          package-manager-cache: false
+
+      - name: Upgrade npm
+        run: npm install -g npm@12
+        working-directory: ${{ runner.temp }}
+
+      - name: Cache npm
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint:ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm run test:coverage
+
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # WebKitGTK and friends: what Tauri links against on Linux.
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev libdbus-1-dev
+
+      # Reads rust-toolchain.toml (channel + rustfmt/clippy) and caches ~/.cargo + target/.
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v2
+        with:
+          cache-workspaces: src-tauri
+
+      # tauri-build embeds the UI at compile time; an empty dist/ is enough to
+      # compile and test the Rust side without building the UI here.
+      - name: Stub UI build output
+        run: mkdir -p dist && echo '<!doctype html>' > dist/index.html
+
+      - name: Format
+        run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
+
+      - name: Clippy
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+
+      - name: Test
+        run: cargo test --manifest-path src-tauri/Cargo.toml

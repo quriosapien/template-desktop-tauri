@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/* Brand accent: the one colour that differs between the desktop templates
+   (amber here, sky in template-desktop-electron). Views use `*-accent` only. */
+@theme {
+  --color-accent: var(--color-amber-600);
+}
+
+/* The shell sets the native theme (Settings → Appearance); the webview's
+   prefers-color-scheme follows it, so Tailwind's default `dark:` variant and
+   native form controls (color-scheme) track it with no JS. */
+@layer base {
+  html {
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+  }
+}

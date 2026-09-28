@@ -1,0 +1,47 @@
+[package]
+name = "template-desktop-tauri"
+version = "0.1.0"
+description = "Production-grade Tauri 2 + Vue 3 desktop template"
+authors = ["quriosapien"]
+homepage = "https://github.com/quriosapien/template-desktop-tauri"
+repository = "https://github.com/quriosapien/template-desktop-tauri"
+edition = "2024"
+rust-version = "1.90"
+publish = false
+
+[lib]
+# The `_lib` suffix avoids a lib/bin name clash on Windows (rust-lang/cargo#8519).
+# main.rs stays a one-liner so everything testable lives in the library.
+name = "template_desktop_tauri_lib"
+crate-type = ["rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.7", features = [] }
+
+[dependencies]
+tauri = { version = "2.12", features = [] }
+tauri-plugin-log = "2.10"
+tauri-plugin-opener = "2.7"
+tauri-plugin-single-instance = "2.5"
+tauri-plugin-updater = "2.13"
+keyring = "4.2"
+log = "0.4"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+
+[dev-dependencies]
+tempfile = "3"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true

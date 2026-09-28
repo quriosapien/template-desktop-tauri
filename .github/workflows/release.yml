@@ -1,0 +1,95 @@
+name: Release
+
+# Push a tag matching package.json's version (e.g. `v0.2.0`) to build installers
+# for every OS and attach them — plus the signed `latest.json` update feed — to a
+# DRAFT GitHub Release. Publishing the draft is what makes the updater see it.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write # tauri-action creates the draft release and uploads assets
+
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            args: --target aarch64-apple-darwin
+          - os: macos-latest
+            args: --target x86_64-apple-darwin
+          - os: windows-latest
+            args: ''
+          - os: ubuntu-22.04 # oldest supported glibc → widest AppImage/deb compatibility
+            args: ''
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # Node 26 bundles npm 11; devEngines requires npm >= 12. setup-node's npm
+      # cache runs `npm config get cache` inside the repo, which devEngines
+      # rejects under npm 11, so: Node first, then npm 12 (installed outside the
+      # repo), then a second setup-node pass that only enables the cache.
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          package-manager-cache: false
+
+      - name: Upgrade npm
+        run: npm install -g npm@12
+        working-directory: ${{ runner.temp }}
+
+      - name: Cache npm
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev libdbus-1-dev
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v2
+        with:
+          # Both macOS architectures build on the arm64 runner.
+          target: ${{ runner.os == 'macOS' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+          cache-workspaces: src-tauri
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Packaged builds need an absolute API URL (repo Settings → Variables →
+      # VITE_API_BASE_URL) — and its origin in tauri.conf.json's CSP connect-src.
+      - name: Export API base URL
+        if: vars.VITE_API_BASE_URL != ''
+        shell: bash
+        run: echo "VITE_API_BASE_URL=${{ vars.VITE_API_BASE_URL }}" >> "$GITHUB_ENV"
+
+      - name: Build and publish
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Required: signs the update bundles (see README → Releasing).
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          # Optional OS code signing — without these, macOS builds are ad-hoc
+          # signed and Windows builds unsigned (first-launch warnings).
+          # APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          # APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          # APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          # APPLE_ID: ${{ secrets.APPLE_ID }}
+          # APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          # APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        with:
+          tagName: v__VERSION__
+          releaseName: v__VERSION__
+          releaseDraft: true
+          uploadUpdaterJson: true
+          args: --config src-tauri/tauri.release.conf.json ${{ matrix.args }}
