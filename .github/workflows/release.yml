@@ -5,7 +5,7 @@ name: Release
 # DRAFT GitHub Release. Publishing the draft is what makes the updater see it.
 on:
   push:
-    tags: ['v*']
+    tags: ["v*"]
 
 permissions:
   contents: write # tauri-action creates the draft release and uploads assets
@@ -21,9 +21,9 @@ jobs:
           - os: macos-latest
             args: --target x86_64-apple-darwin
           - os: windows-latest
-            args: ''
+            args: ""
           - os: ubuntu-22.04 # oldest supported glibc → widest AppImage/deb compatibility
-            args: ''
+            args: ""
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -36,7 +36,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
           package-manager-cache: false
 
       - name: Upgrade npm
@@ -46,8 +46,8 @@ jobs:
       - name: Cache npm
         uses: actions/setup-node@v7
         with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
+          node-version-file: ".nvmrc"
+          cache: "npm"
 
       - name: Install system dependencies (Linux)
         if: runner.os == 'Linux'

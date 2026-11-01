@@ -55,8 +55,8 @@ and the updater run.
 
 - [ ] Tests added or updated (this repo follows TDD; see [CLAUDE.md](CLAUDE.md)).
 - [ ] A new native capability touches every layer listed in CLAUDE.md's layering rule, including
-      `build.rs` and `capabilities/default.json`.
+  `build.rs` and `capabilities/default.json`.
 - [ ] Security-relevant changes (capability, CSP, navigation guards, command validation) keep
-      their regression tests green.
+  their regression tests green.
 - [ ] Any change under `src/` that isn't shell-specific is mirrored to `template-desktop-electron`.
 - [ ] Clear, descriptive commit messages.
