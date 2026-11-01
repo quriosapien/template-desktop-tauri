@@ -4,10 +4,10 @@ pre-commit:
   parallel: true
   commands:
     biome:
-      glob: '*.{js,ts,jsx,tsx,json,jsonc,vue,css}'
+      glob: "*.{js,ts,jsx,tsx,json,jsonc,vue,css,md,yml,yaml}"
       run: npx biome check --write --no-errors-on-unmatched {staged_files}
       stage_fixed: true
     rustfmt:
-      glob: '*.rs'
+      glob: "*.rs"
       run: rustfmt --edition 2024 {staged_files}
       stage_fixed: true

@@ -12,7 +12,7 @@ here are candidates, not commitments. Pick one up, or leave the repo as-is.
 
 - **Generate the updater key and replace the placeholder pubkey** as soon as the repo is pushed.
   See README → Releasing.
-  *Done when:* a tagged draft release, once published, updates an installed older build.
+  _Done when:_ a tagged draft release, once published, updates an installed older build.
 
 ## Next — meaningful advancement, small dependency cost
 
@@ -22,8 +22,8 @@ here are candidates, not commitments. Pick one up, or leave the repo as-is.
 - **Standing item: recheck tauri-specta on every sweep.** Command bindings are hand-written today
   (`native.api.ts` ↔ `commands/`), and both sides' tests pin the names and shapes. tauri-specta
   2 was still a release candidate when this repo was created, which the no-pre-release rule
-  excludes. Rechecked 2026-10-10: still `2.0.0-rc.25`.
-  *Done when:* it's stable and generates `native.api.ts`'s types, or it's dropped with a reason.
+  excludes. Rechecked 2026-11-01: still `2.0.0-rc.26` (specta `2.0.0-rc.27`).
+  _Done when:_ it's stable and generates `native.api.ts`'s types, or it's dropped with a reason.
 
 - **Wire up OS code signing.** The secrets are listed, commented out, in `release.yml`. Signed
   macOS builds also end the dev-rebuild Keychain prompts for release users.
@@ -62,5 +62,7 @@ These rules are shared across the `template-*` repos and apply here too:
 - Dependency sweeps commit with a lowercase `setup:` or `chore(deps):` prefix. Nothing is pushed
   without the user's say-so.
 - **TypeScript 6** until `vue-tsc` supports TS 7, the same gate as `template-webapp-vuejs`.
+  Rechecked 2026-11-01: `typescript` 7.0.2 + `vue-tsc` 3.3.14 still fails with
+  `ERR_PACKAGE_PATH_NOT_EXPORTED`.
 - **Node 26 everywhere**, enforced by `devEngines`. CI upgrades to npm 12 before `npm ci` because
   Node 26 bundles npm 11.
