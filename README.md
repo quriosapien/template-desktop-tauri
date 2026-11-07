@@ -6,6 +6,7 @@ WebView2 on Windows).
 
 The UI carries full parity with `template-webapp-vuejs`: JWT auth with refresh-token rotation,
 guarded routes, Pinia and Tailwind CSS v4. On top of that sits a desktop layer:
+
 - the refresh token lives in the **OS keychain**, not localStorage;
 - settings are persisted natively and applied natively;
 - a native menu, safe external links, and a single-instance lock;
@@ -177,6 +178,7 @@ To use a real backend, set `DEV_MOCK_API=false DEV_PROXY=true DEV_PROXY_TARGET=<
 ## Releasing and auto-update
 
 **One-time setup: update signing.** Tauri's updater only installs bundles signed with your key.
+
 1. Run `npm run tauri signer generate -- -w ~/.tauri/template-desktop-tauri.key`, and choose a
    password.
 2. Paste the **public** key into `src-tauri/tauri.conf.json` → `plugins.updater.pubkey`,
@@ -186,6 +188,7 @@ To use a real backend, set `DEV_MOCK_API=false DEV_PROXY=true DEV_PROXY_TARGET=<
    goes in the repo.
 
 **Each release:**
+
 1. Bump `version` in `package.json` (`tauri.conf.json` reads it), commit, then tag and push:
    `git tag v0.2.0 && git push --tags`.
 2. `.github/workflows/release.yml` runs `tauri-action` on macOS (arm64 + x64), Windows and Linux.
@@ -201,6 +204,7 @@ API URL, and add its origin to the CSP.
 
 **OS code signing** (Apple Developer ID and notarization, or a Windows certificate) is opt-in; the
 environment block in `release.yml` lists the secrets. Without it:
+
 - macOS: builds are ad-hoc signed, and Gatekeeper warns on first launch.
 - Windows: SmartScreen warns.
 
@@ -219,6 +223,7 @@ Then delete the `android/`, `ios/` and `Square*`/`StoreLogo` outputs; this templ
 
 Both desktop templates keep `src/` identical, so UI work moves between them by copying files. Only
 these differ:
+
 - `src/api/native.api.ts` and its test: the shell binding.
 - The `VITE_APP_NAME` default in `src/config/env.ts` and its test.
 - The accent colour in `src/styles/index.css`.

@@ -5,6 +5,7 @@ Guidance for anyone working in this repo, including AI coding assistants.
 ## What this repo is
 
 A **scaffold**, not a product. It has three reference features:
+
 - **Auth:** login, keychain-persisted refresh token, and a guarded dashboard.
 - **Settings:** a theme persisted and applied natively.
 - **Updates:** check and install from GitHub Releases.

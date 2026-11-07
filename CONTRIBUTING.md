@@ -46,6 +46,7 @@ and the updater run.
 ## What CI checks
 
 `.github/workflows/ci.yml` runs on every push to `main` and every PR. There are two jobs:
+
 - `ui`: lint → typecheck → build → test, with coverage thresholds.
 - `rust`: fmt → clippy → test, on Linux with the WebKitGTK dependencies.
 
