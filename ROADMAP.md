@@ -22,7 +22,7 @@ here are candidates, not commitments. Pick one up, or leave the repo as-is.
 - **Standing item: recheck tauri-specta on every sweep.** Command bindings are hand-written today
   (`native.api.ts` ↔ `commands/`), and both sides' tests pin the names and shapes. tauri-specta
   2 was still a release candidate when this repo was created, which the no-pre-release rule
-  excludes. Rechecked 2026-11-01: still `2.0.0-rc.26` (specta `2.0.0-rc.27`).
+  excludes. Rechecked 2026-11-07: still `2.0.0-rc.26` (specta `2.0.0-rc.28`).
   _Done when:_ it's stable and generates `native.api.ts`'s types, or it's dropped with a reason.
 
 - **Wire up OS code signing.** The secrets are listed, commented out, in `release.yml`. Signed
@@ -62,7 +62,7 @@ These rules are shared across the `template-*` repos and apply here too:
 - Dependency sweeps commit with a lowercase `setup:` or `chore(deps):` prefix. Nothing is pushed
   without the user's say-so.
 - **TypeScript 6** until `vue-tsc` supports TS 7, the same gate as `template-webapp-vuejs`.
-  Rechecked 2026-11-01: `typescript` 7.0.2 + `vue-tsc` 3.3.14 still fails with
+  Rechecked 2026-11-07: `typescript` 7.0.2 + `vue-tsc` 3.3.14 still fails with
   `ERR_PACKAGE_PATH_NOT_EXPORTED`.
 - **Node 26 everywhere**, enforced by `devEngines`. CI upgrades to npm 12 before `npm ci` because
   Node 26 bundles npm 11.
