@@ -46,6 +46,7 @@ and the updater run.
 ## What CI checks
 
 `.github/workflows/ci.yml` runs on every push to `main` and every PR. There are two jobs:
+
 - `ui`: lint → typecheck → build → test, with coverage thresholds.
 - `rust`: fmt → clippy → test, on Linux with the WebKitGTK dependencies.
 
@@ -55,8 +56,8 @@ and the updater run.
 
 - [ ] Tests added or updated (this repo follows TDD; see [CLAUDE.md](CLAUDE.md)).
 - [ ] A new native capability touches every layer listed in CLAUDE.md's layering rule, including
-      `build.rs` and `capabilities/default.json`.
+  `build.rs` and `capabilities/default.json`.
 - [ ] Security-relevant changes (capability, CSP, navigation guards, command validation) keep
-      their regression tests green.
+  their regression tests green.
 - [ ] Any change under `src/` that isn't shell-specific is mirrored to `template-desktop-electron`.
 - [ ] Clear, descriptive commit messages.

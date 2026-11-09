@@ -6,6 +6,7 @@ WebView2 on Windows).
 
 The UI carries full parity with `template-webapp-vuejs`: JWT auth with refresh-token rotation,
 guarded routes, Pinia and Tailwind CSS v4. On top of that sits a desktop layer:
+
 - the refresh token lives in the **OS keychain**, not localStorage;
 - settings are persisted natively and applied natively;
 - a native menu, safe external links, and a single-instance lock;
@@ -16,18 +17,18 @@ The `src/` UI is shared with its sibling `template-desktop-electron` (see
 
 ## Toolchain
 
-| Tool | Role |
-| --- | --- |
-| [Tauri](https://v2.tauri.app) 2.12 | Desktop shell: Rust core + OS webview; bundler for app/dmg, msi/nsis, deb/rpm/AppImage |
-| [Rust](https://www.rust-lang.org) 1.99 | The shell's language. `rust-toolchain.toml` pins it the way `.nvmrc` pins Node |
-| [Vite](https://vitejs.dev) 8 | UI dev server (HMR) and build |
-| [keyring](https://crates.io/crates/keyring) 4 | OS keychain access (macOS Keychain, Windows Credential Manager, Linux Secret Service) |
-| tauri-plugin-updater / -log / -opener / -single-instance | Auto-update, logging, opening links in the system browser, one running instance. All are used **from Rust only** |
-| [vue-tsc](https://github.com/vuejs/language-tools) | UI typecheck. Held at TypeScript 6 for the same reason as `template-webapp-vuejs`: vue-tsc can't load TS 7 yet |
-| [Biome](https://biomejs.dev) + rustfmt/clippy | Lint + format: Biome for TS/Vue/JSON/CSS, rustfmt and clippy for Rust |
-| [Vitest](https://vitest.dev) + [@vue/test-utils](https://test-utils.vuejs.org) + [MSW](https://mswjs.io) | UI unit tests; `@tauri-apps/api/mocks` fakes the IPC. Rust has its own `cargo test` suite |
-| [lefthook](https://github.com/evilmartians/lefthook) | Git hooks (pre-commit Biome + rustfmt) |
-| [Tailwind CSS v4](https://tailwindcss.com) | Styling, via `@tailwindcss/vite` |
+| Tool                                                                                                     | Role                                                                                                             |
+| -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| [Tauri](https://v2.tauri.app) 2.12                                                                       | Desktop shell: Rust core + OS webview; bundler for app/dmg, msi/nsis, deb/rpm/AppImage                           |
+| [Rust](https://www.rust-lang.org) 1.99                                                                   | The shell's language. `rust-toolchain.toml` pins it the way `.nvmrc` pins Node                                   |
+| [Vite](https://vitejs.dev) 8                                                                             | UI dev server (HMR) and build                                                                                    |
+| [keyring](https://crates.io/crates/keyring) 4                                                            | OS keychain access (macOS Keychain, Windows Credential Manager, Linux Secret Service)                            |
+| tauri-plugin-updater / -log / -opener / -single-instance                                                 | Auto-update, logging, opening links in the system browser, one running instance. All are used **from Rust only** |
+| [vue-tsc](https://github.com/vuejs/language-tools)                                                       | UI typecheck. Held at TypeScript 6 for the same reason as `template-webapp-vuejs`: vue-tsc can't load TS 7 yet   |
+| [Biome](https://biomejs.dev) + rustfmt/clippy                                                            | Lint + format: Biome for TS/Vue/JSON/CSS, rustfmt and clippy for Rust                                            |
+| [Vitest](https://vitest.dev) + [@vue/test-utils](https://test-utils.vuejs.org) + [MSW](https://mswjs.io) | UI unit tests; `@tauri-apps/api/mocks` fakes the IPC. Rust has its own `cargo test` suite                        |
+| [lefthook](https://github.com/evilmartians/lefthook)                                                     | Git hooks (pre-commit Biome + rustfmt)                                                                           |
+| [Tailwind CSS v4](https://tailwindcss.com)                                                               | Styling, via `@tailwindcss/vite`                                                                                 |
 
 ## Requirements
 
@@ -57,19 +58,19 @@ server answers with the mock API, so no backend is needed.
 
 ## Scripts
 
-| Script | Description |
-| --- | --- |
-| `npm run dev` | `tauri dev`: Vite (via `dev:renderer`) + the Rust app. UI edits hot-reload; Rust edits rebuild and relaunch |
-| `npm run dev:renderer` | Vite alone (what `tauri dev` runs; there's no native bridge in a plain browser) |
-| `npm run build` | Typecheck, then `vite build` → `dist/` (what `tauri build` embeds) |
-| `npm run dist` | `tauri build`: release binary + installers for the current OS (→ `src-tauri/target/release/bundle/`) |
-| `npm run tauri -- <cmd>` | The Tauri CLI, e.g. `icon`, `signer generate`, `info` |
-| `npm run typecheck` | `vue-tsc --noEmit` |
-| `npm run lint` / `lint:fix` / `lint:ci` / `format` | Biome check / fix / CI mode / format |
-| `npm run lint:rust` / `format:rust` | `cargo fmt --check` + `cargo clippy -D warnings` / `cargo fmt` |
-| `npm test` / `test:watch` / `test:coverage` | Vitest once / watch / with enforced coverage thresholds |
-| `npm run test:rust` | `cargo test` |
-| `npm run prepare` | Install lefthook git hooks (runs automatically after `npm install`) |
+| Script                                             | Description                                                                                                 |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `npm run dev`                                      | `tauri dev`: Vite (via `dev:renderer`) + the Rust app. UI edits hot-reload; Rust edits rebuild and relaunch |
+| `npm run dev:renderer`                             | Vite alone (what `tauri dev` runs; there's no native bridge in a plain browser)                             |
+| `npm run build`                                    | Typecheck, then `vite build` → `dist/` (what `tauri build` embeds)                                          |
+| `npm run dist`                                     | `tauri build`: release binary + installers for the current OS (→ `src-tauri/target/release/bundle/`)        |
+| `npm run tauri -- <cmd>`                           | The Tauri CLI, e.g. `icon`, `signer generate`, `info`                                                       |
+| `npm run typecheck`                                | `vue-tsc --noEmit`                                                                                          |
+| `npm run lint` / `lint:fix` / `lint:ci` / `format` | Biome check / fix / CI mode / format                                                                        |
+| `npm run lint:rust` / `format:rust`                | `cargo fmt --check` + `cargo clippy -D warnings` / `cargo fmt`                                              |
+| `npm test` / `test:watch` / `test:coverage`        | Vitest once / watch / with enforced coverage thresholds                                                     |
+| `npm run test:rust`                                | `cargo test`                                                                                                |
+| `npm run prepare`                                  | Install lefthook git hooks (runs automatically after `npm install`)                                         |
 
 ## Environment configuration
 
@@ -177,6 +178,7 @@ To use a real backend, set `DEV_MOCK_API=false DEV_PROXY=true DEV_PROXY_TARGET=<
 ## Releasing and auto-update
 
 **One-time setup: update signing.** Tauri's updater only installs bundles signed with your key.
+
 1. Run `npm run tauri signer generate -- -w ~/.tauri/template-desktop-tauri.key`, and choose a
    password.
 2. Paste the **public** key into `src-tauri/tauri.conf.json` → `plugins.updater.pubkey`,
@@ -186,6 +188,7 @@ To use a real backend, set `DEV_MOCK_API=false DEV_PROXY=true DEV_PROXY_TARGET=<
    goes in the repo.
 
 **Each release:**
+
 1. Bump `version` in `package.json` (`tauri.conf.json` reads it), commit, then tag and push:
    `git tag v0.2.0 && git push --tags`.
 2. `.github/workflows/release.yml` runs `tauri-action` on macOS (arm64 + x64), Windows and Linux.
@@ -201,6 +204,7 @@ API URL, and add its origin to the CSP.
 
 **OS code signing** (Apple Developer ID and notarization, or a Windows certificate) is opt-in; the
 environment block in `release.yml` lists the secrets. Without it:
+
 - macOS: builds are ad-hoc signed, and Gatekeeper warns on first launch.
 - Windows: SmartScreen warns.
 
@@ -219,6 +223,7 @@ Then delete the `android/`, `ios/` and `Square*`/`StoreLogo` outputs; this templ
 
 Both desktop templates keep `src/` identical, so UI work moves between them by copying files. Only
 these differ:
+
 - `src/api/native.api.ts` and its test: the shell binding.
 - The `VITE_APP_NAME` default in `src/config/env.ts` and its test.
 - The accent colour in `src/styles/index.css`.
@@ -229,17 +234,17 @@ these differ:
 UI files are kebab-case with a role suffix, imported through the `@/` alias. Rust follows Rust
 conventions: snake_case modules, one file per command domain under `commands/`.
 
-| Suffix | Role |
-| --- | --- |
-| `*.view.vue` | Routed page component |
-| `*.component.vue` | Reusable (non-routed) component |
-| `*.store.ts` | Pinia store |
-| `*.api.ts` | Typed call group (HTTP or native) |
-| `*.client.ts` | Low-level transport (HTTP client) |
-| `*.plugin.ts` | Vite plugin (dev/build tooling, runs in Node) |
-| `*.util.ts` | Framework-agnostic helper |
-| `*.types.ts` | Shared TypeScript types |
-| `*.test.ts` | Unit test in `src/tests/`, mirroring `src/`. Rust tests live in `#[cfg(test)]` modules |
+| Suffix            | Role                                                                                   |
+| ----------------- | -------------------------------------------------------------------------------------- |
+| `*.view.vue`      | Routed page component                                                                  |
+| `*.component.vue` | Reusable (non-routed) component                                                        |
+| `*.store.ts`      | Pinia store                                                                            |
+| `*.api.ts`        | Typed call group (HTTP or native)                                                      |
+| `*.client.ts`     | Low-level transport (HTTP client)                                                      |
+| `*.plugin.ts`     | Vite plugin (dev/build tooling, runs in Node)                                          |
+| `*.util.ts`       | Framework-agnostic helper                                                              |
+| `*.types.ts`      | Shared TypeScript types                                                                |
+| `*.test.ts`       | Unit test in `src/tests/`, mirroring `src/`. Rust tests live in `#[cfg(test)]` modules |
 
 ## Code style consistency
 

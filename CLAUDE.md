@@ -5,6 +5,7 @@ Guidance for anyone working in this repo, including AI coding assistants.
 ## What this repo is
 
 A **scaffold**, not a product. It has three reference features:
+
 - **Auth:** login, keychain-persisted refresh token, and a guarded dashboard.
 - **Settings:** a theme persisted and applied natively.
 - **Updates:** check and install from GitHub Releases.
@@ -78,7 +79,7 @@ the expected reason, then write the minimal code to pass.
   verification.
 - **Release builds can't log in until `VITE_API_BASE_URL` points at a real backend** and its
   origin is in the CSP. The mock API only exists on the dev server.
-- **`Update check failed`** (404) until the GitHub repo exists and has a *published* release.
+- **`Update check failed`** (404) until the GitHub repo exists and has a _published_ release.
 - **macOS may prompt for Keychain access after rebuilds** in dev: each debug binary gets a new
   ad-hoc signature.
 - **On Linux without a Secret Service, sessions don't survive a restart** (`unsupported` →
