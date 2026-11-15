@@ -39,6 +39,11 @@ unsafe_code = "forbid"
 [lints.clippy]
 all = { level = "warn", priority = -1 }
 
+[lints.cargo]
+# `homepage` feeds Help → Project Homepage and `app_info` (CARGO_PKG_HOMEPAGE), so it stays
+# explicit even while it matches `repository`.
+redundant_homepage = "allow"
+
 [profile.release]
 codegen-units = 1
 lto = true
